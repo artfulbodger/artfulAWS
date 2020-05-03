@@ -1,5 +1,5 @@
 # artfulAWS
-PowerShell Scripts, Functions, and Modules for managing Amazon Web Services
+PowerShell Module for managing AWS services for multiple accounts that are members of AWS Organisations
 
 ## Help Topics
 This section contains the help topics for the cmdlets taht are installed with PowerShell artfulAWS module.
