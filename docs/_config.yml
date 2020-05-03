@@ -1,0 +1,4 @@
+theme: jekyll-theme-minimal
+title: "artfulAWS"
+description: "PowerShell Module for managing AWS services for multiple accounts that are members of AWS Organisations"
+show_downloads: true
