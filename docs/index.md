@@ -1,10 +1,9 @@
 # artfulAWS
 PowerShell Scripts, Functions, and Modules for managing Amazon Web Services
 
-# Status
-[![Issues Open](https://img.shields.io/github/issues/artfulbodger/artfulAWS.svg)](https://github.com/artfulbodger/artfulAWS/issues)
-[![Open Bugs](https://img.shields.io/github/issues-raw/artfulbodger/artfulAWS/bug.svg?color=red&label=open%20bugs)](https://github.com/artfulbodger/artfulAWS/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+## Help Topics
+This section contains the help topics for the cmdlets taht are installed with PowerShell artfulAWS module.
 
-# Documentation
-
-The documentation for this module can be found on this [github page](https://artfulbodger.github.io/artfulAWS/)
+### AWS Identity Providers
+[New-artfulIAMSAMLProvider](/New-artfulIAMSAMLProvider.md)
+[Update-artfulIAMSAMLProvider](/Update-artfulIAMSAMLProvider.md)
