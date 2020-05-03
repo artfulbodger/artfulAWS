@@ -2,3 +2,8 @@ theme: jekyll-theme-minimal
 title: "artfulAWS"
 description: "PowerShell Module for managing AWS services for multiple accounts that are members of AWS Organisations"
 show_downloads: true
+author:
+  name: Rich Carpenter
+  twitter: artfulbodger
+twitter_username: artfulbodger
+github_username: artfulbodger
