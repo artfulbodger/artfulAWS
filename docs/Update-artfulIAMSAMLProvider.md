@@ -163,3 +163,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+[New-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
+[Update-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
+
