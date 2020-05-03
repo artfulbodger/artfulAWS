@@ -9,23 +9,29 @@
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
-	"version": "2.0.0",
-
+    "version": "2.0.0",
     // Start PowerShell
     "windows": {
         "command": "${env:windir}/System32/WindowsPowerShell/v1.0/powershell.exe",
         //"command": "${env:ProgramFiles}/PowerShell/6.0.0/powershell.exe",
-        "args": [ "-NoProfile", "-ExecutionPolicy", "Bypass" ]
+        "args": [
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass"
+        ]
     },
     "linux": {
         "command": "/usr/bin/powershell",
-        "args": [ "-NoProfile" ]
+        "args": [
+            "-NoProfile"
+        ]
     },
     "osx": {
         "command": "/usr/local/bin/powershell",
-        "args": [ "-NoProfile" ]
+        "args": [
+            "-NoProfile"
+        ]
     },
-
     // Associate with test task runner
     "tasks": [
         {
@@ -38,5 +44,5 @@
             ],
             "problemMatcher": "$pester"
         }
-	]
+    ]
 }
