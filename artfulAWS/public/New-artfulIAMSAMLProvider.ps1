@@ -21,7 +21,10 @@ function New-artfulIAMSAMLProvider {
       Place additional notes here.
 
       .LINK
-      Update-artfulIAMSAMLProvider
+      New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
+
+      .LINK
+      Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
   #>
 
   [CmdletBinding(SupportsShouldProcess = $true)]

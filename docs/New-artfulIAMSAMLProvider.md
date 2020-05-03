@@ -102,5 +102,5 @@ Place additional notes here.
 
 ## RELATED LINKS
 
-[Update-artfulIAMSAMLProvider]()
-
+[New-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
+[Update-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
