@@ -27,7 +27,7 @@ Describe "General project validation: $moduleName" {
     It "Module '$moduleName' HelpURI is accessible" {
         Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
         $module = Get-Module -Name $moduleName
-        $statuscode = (Invoke-Webrequest -Uri $($module.helpinfouri)).StatusCode
+        $statuscode = (Invoke-Webrequest -Uri $($module.helpinfouri) -UseBasicParsing).StatusCode
         $statuscode | Should Be 200
     }
 }
@@ -67,21 +67,22 @@ foreach ($Manifest in $ManifestPath) {
     $ExportedFunctions = Get-Command -Module $ModuleInfo.Name
     Foreach ($Function in $ExportedFunctions) {
         Describe "Function '$($Function.Name)'" {
-            It 'Has a valid Online help'{
-                (Invoke-Webrequest -Uri $($Function.HelpUri)).StatusCode | Should Be 200
+            It 'Has a valid Online help' {
+                (Invoke-Webrequest -Uri $($Function.HelpUri) -UseBasicParsing).StatusCode | Should Be 200
             }
         }
         Describe "Function '$($Function.Name)' help metadata" {
+            Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
             $functionhelp = Get-Help $($Function.Name)
-            It 'Has a custom Synopsis'{
+            It 'Has a custom Synopsis' {
                 $functionhelp.synopsis |
                 Should Not Be "Describe purpose of $($Function.Name) in 1-2 sentences."
             }
-            It 'Has a custom Description'{
+            It 'Has a custom Description' {
                 $functionhelp.description |
                 Should Not Be "Add a more complete description of what the function does."
             }
-            It 'Has Examples'{
+            It 'Has Examples' {
                 $functionhelp.examples.count | Should -BeGreaterThan 0
             }
         }
