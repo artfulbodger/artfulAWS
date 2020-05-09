@@ -43,7 +43,14 @@ function Update-artfulIAMSAMLProvider {
     [Parameter(Mandatory)][string]$Name,
     [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id,
     [Parameter(Mandatory)][string]$adfsfqdn,
-    [Parameter(Mandatory)][string]$profilename,
+    [Parameter(Mandatory)][ValidateScript( {
+        If (Get-AWSCredential -ProfileName $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid Credential profile for this user"
+        }
+      })][string]$profilename,
     [Parameter()][string]$iamrole = 'OrganizationAccountAccessRole',
     [Parameter()][string]$region = 'eu-west-1'
   )
