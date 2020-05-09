@@ -24,6 +24,12 @@ Describe "General project validation: $moduleName" {
         $version = [string]$mod.version
         $gittag | Should Be $version
     }
+    It "Module '$moduleName' HelpURI is accessible" {
+        Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
+        $module = Get-Module -Name $moduleName
+        $statuscode = (Invoke-Webrequest -Uri $($module.helpinfouri)).StatusCode
+        $statuscode | Should Be 200
+    }
 }
 
 $ManifestPath = Get-ChildItem $moduleRoot -Include *.psd1 -Recurse
@@ -58,4 +64,14 @@ foreach ($Manifest in $ManifestPath) {
             Should BeNullOrEmpty
         }
     }
+    $ExportedFunctions = Get-Command -Module $ModuleInfo.Name
+    Foreach ($Function in $ExportedFunctions) {
+        Describe "Function '$($Function.Name)'" {
+            It 'Has a valid Online help'{
+                (Invoke-Webrequest -Uri $($Function.HelpUri)).StatusCode | Should Be 200
+            }
+        }
+    }
 }
+
+(Invoke-webrequest $((get-command New-artfuliamsamlprovider).helpuri)).statuscode
