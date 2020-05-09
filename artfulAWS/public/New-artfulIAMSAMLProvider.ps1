@@ -2,50 +2,73 @@
 function New-artfulIAMSAMLProvider {
   <#
     .SYNOPSIS
-      Describe purpose of New-artfulIAMSAMLProvider in 1-2 sentences.
+      Creates an IAM resource that describes an identity provider (IdP) that supports ADFS.
 
-      .DESCRIPTION
-      Add a more complete description of what the function does.
+    .DESCRIPTION
+      Downloads the ADFS metadata document directly from the ADFS endpoint declared, then creates the defined IAM Identity Provider with the metadata from ADFS by assuming the rolename provided.
 
-      .PARAMETER id
+    .PARAMETER id
       The unique identifier (ID) of the account.
 
-      .PARAMETER adfsfqdn
+    .PARAMETER adfsfqdn
       Fully Qualified domain name for ADFS endpoint to query for metadata.
 
-      .PARAMETER profilename
+    .PARAMETER profilename
       The user-defined name of an AWS credentials or SAML-based role profile containing credential information.
 
-      .PARAMETER iamrole
+    .PARAMETER iamrole
       The name of the IAM role to assume, including any path.
 
-      .PARAMETER Name
+    .PARAMETER Name
       The name of the SAML provider to update
 
-      .PARAMETER region
+    .PARAMETER region
       The system name of an AWS region or an AWSRegion instance.
 
-      .EXAMPLE
+    .EXAMPLE
       New-artfulIAMSAMLProvider -id '012345678912' -adfsfqdn 'adfs.example.com' -profilename awsuser -Name MySSO -iamrole 'OrganizationAccountAccessRole'
       Downloads the metadata document from 'adfs.example.com', connects to account 012345678912 and assumes role 'OrganizationAccountAccessRole'.
-      Creates Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
+      Creates a new Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
 
-      .LINK
+    .LINK
       New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
 
-      .LINK
+    .LINK
       Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
   #>
 
-  [CmdletBinding(SupportsShouldProcess = $true)]
+  [CmdletBinding(SupportsShouldProcess = $true, HelpURI = "https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider")]
   Param
   (
     [Parameter(Mandatory)][string]$Name,
     [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id,
-    [Parameter(Mandatory)][string]$adfsfqdn,
-    [Parameter(Mandatory)][string]$profilename,
+    [Parameter(Mandatory)][ValidateScript( {
+        Try {
+          Invoke-Webrequest -uri "https://$($_)/FederationMetadata/2007-06/FederationMetadata.xml"
+          $true
+        }
+        Catch {
+          throw "Unable to connect to $_ "
+        }
+
+      })][string]$adfsfqdn,
+    [Parameter(Mandatory)][ValidateScript( {
+        If (Get-AWSCredential -ProfileName $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid Credential profile for this user"
+        }
+      })][string]$profilename,
     [Parameter()][string]$iamrole = 'OrganizationAccountAccessRole',
-    [Parameter()][string]$region = 'eu-west-1'
+    [Parameter()][ValidateScript( {
+        If ($(Get-awsRegion).Region -contains $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid AWS Region."
+        }
+      })][string]$region = 'eu-west-1'
   )
   Begin {
   }
