@@ -4,41 +4,40 @@ function Update-artfulIAMSAMLProvider {
     .SYNOPSIS
       Updates AWS IAM Identity provider using metadata provided by an ADFS endpoint.
 
-      .DESCRIPTION
+    .DESCRIPTION
       Downloads the ADFS metadata document directly from the ADFS endpoint declared, then updates the defined IAM Identity Provide with the metadata from ADFS
       by assuming the rolename provided.
 
-      .PARAMETER id
+    .PARAMETER id
       The unique identifier (ID) of the account.
 
-      .PARAMETER adfsfqdn
+    .PARAMETER adfsfqdn
       Fully Qualified domain name for ADFS endpoint to query for metadata.
 
-      .PARAMETER profilename
+    .PARAMETER profilename
       The user-defined name of an AWS credentials or SAML-based role profile containing credential information.
 
-      .PARAMETER iamrole
+    .PARAMETER iamrole
       The name of the IAM role to assume, including any path.
 
-      .PARAMETER Name
+    .PARAMETER Name
       The name of the SAML provider to update
 
-      .PARAMETER region
+    .PARAMETER region
       The system name of an AWS region or an AWSRegion instance.
 
-      .EXAMPLE
+    .EXAMPLE
       Update-artfulIAMSAMLProvider -id '012345678912' -adfsfqdn 'adfs.example.com' -profilename awsuser -Name MySSO -iamrole 'OrganizationAccountAccessRole'
       Downloads the metadata document from 'adfs.example.com', connects to account 012345678912 and assumes role 'OrganizationAccountAccessRole'.
       Updates Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
 
-      .LINK
+    .LINK
       New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
 
-      .LINK
+    .LINK
       Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
   #>
-
-  [CmdletBinding(SupportsShouldProcess = $true)]
+  [CmdletBinding(SupportsShouldProcess = $true, HelpURI = "https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider")]
   Param
   (
     [Parameter(Mandatory)][string]$Name,
@@ -48,8 +47,9 @@ function Update-artfulIAMSAMLProvider {
     [Parameter()][string]$iamrole = 'OrganizationAccountAccessRole',
     [Parameter()][string]$region = 'eu-west-1'
   )
-
   Begin {
+  }
+  Process {
     If ($PSCmdlet.ShouldProcess("AWS Account $Id", "Update ADFS SAML Identity Provider")) {
       Try {
         $metadata = Invoke-Webrequest -uri "https://$($adfsfqdn)/FederationMetadata/2007-06/FederationMetadata.xml"
@@ -74,10 +74,8 @@ function Update-artfulIAMSAMLProvider {
       }
     }
     else {
-
+      Write-Verbose ('Update IdP {0}' -f $Name)
     }
-  }
-  Process {
   }
   End {
   }
