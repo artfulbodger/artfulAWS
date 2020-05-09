@@ -52,7 +52,14 @@ function Update-artfulIAMSAMLProvider {
         }
       })][string]$profilename,
     [Parameter()][string]$iamrole = 'OrganizationAccountAccessRole',
-    [Parameter()][string]$region = 'eu-west-1'
+    [Parameter()][ValidateScript( {
+        If ($(Get-awsRegion).Region -contains $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid AWS Region."
+        }
+      })][string]$region = 'eu-west-1'
   )
   Begin {
   }

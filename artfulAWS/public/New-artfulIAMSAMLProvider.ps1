@@ -2,25 +2,26 @@
 function New-artfulIAMSAMLProvider {
   <#
     .SYNOPSIS
-      Describe purpose of New-artfulIAMSAMLProvider in 1-2 sentences.
+      Creates an IAM resource that describes an identity provider (IdP) that supports ADFS.
 
-      .DESCRIPTION
-      Add a more complete description of what the function does.
+    .DESCRIPTION
+      Downloads the ADFS metadata document directly from the ADFS endpoint declared, then creates the defined IAM Identity Provider with the metadata from ADFS by assuming the rolename provided.
 
-      .PARAMETER Name
+    .PARAMETER Name
       The name of the provider to create.
 
-      .PARAMETER Id
+    .PARAMETER id
       The unique identifier (ID) of the account.
 
-      .EXAMPLE
+
+    .EXAMPLE
       New-artfulIAMSAMLProvider -Param1 Value
       Describe what this call does
 
-      .LINK
+    .LINK
       New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
 
-      .LINK
+    .LINK
       Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
   #>
 
@@ -28,7 +29,25 @@ function New-artfulIAMSAMLProvider {
   Param
   (
     [Parameter(Mandatory)][string]$Name,
-    [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id
+    [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id,
+    [Parameter(Mandatory)][string]$adfsfqdn,
+    [Parameter(Mandatory)][ValidateScript( {
+        If (Get-AWSCredential -ProfileName $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid Credential profile for this user"
+        }
+      })][string]$profilename,
+    [Parameter()][string]$iamrole = 'OrganizationAccountAccessRole',
+    [Parameter()][ValidateScript( {
+        If ($(Get-awsRegion).Region -contains $_) {
+          $true
+        }
+        else {
+          throw "$_ is not a valid AWS Region."
+        }
+      })][string]$region = 'eu-west-1'
   )
   Begin {
   }
