@@ -71,7 +71,19 @@ foreach ($Manifest in $ManifestPath) {
                 (Invoke-Webrequest -Uri $($Function.HelpUri)).StatusCode | Should Be 200
             }
         }
+        Describe "Function '$($Function.Name)' help metadata" {
+            $functionhelp = Get-Help $($Function.Name)
+            It 'Has a custom Synopsis'{
+                $functionhelp.synopsis |
+                Should Not Be "Describe purpose of $($Function.Name) in 1-2 sentences."
+            }
+            It 'Has a custom Description'{
+                $functionhelp.description |
+                Should Not Be "Add a more complete description of what the function does."
+            }
+            It 'Has Examples'{
+                $functionhelp.examples.count | Should -BeGreaterThan 0
+            }
+        }
     }
 }
-
-(Invoke-webrequest $((get-command New-artfuliamsamlprovider).helpuri)).statuscode
