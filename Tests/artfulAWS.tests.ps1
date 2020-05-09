@@ -82,9 +82,6 @@ foreach ($Manifest in $ManifestPath) {
                 $functionhelp.description |
                 Should Not Be "Add a more complete description of what the function does."
             }
-            It 'Has Examples' {
-                $functionhelp.examples.count | Should -BeGreaterThan 0
-            }
         }
     }
 }
