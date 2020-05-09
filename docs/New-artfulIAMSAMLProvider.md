@@ -8,29 +8,31 @@ schema: 2.0.0
 # New-artfulIAMSAMLProvider
 
 ## SYNOPSIS
-Describe purpose of New-artfulIAMSAMLProvider in 1-2 sentences.
+Creates an IAM resource that describes an identity provider (IdP) that supports ADFS.
 
 ## SYNTAX
 
 ```
-New-artfulIAMSAMLProvider [-Name] <String> [-Id] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
+New-artfulIAMSAMLProvider [-Name] <String> [-Id] <String> [-adfsfqdn] <String> [-profilename] <String>
+ [[-iamrole] <String>] [[-region] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Add a more complete description of what the function does.
+Downloads the ADFS metadata document directly from the ADFS endpoint declared, then creates the defined IAM Identity Provider with the metadata from ADFS by assuming the rolename provided.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-New-artfulIAMSAMLProvider -Param1 Value
-Describe what this call does
+New-artfulIAMSAMLProvider -id '012345678912' -adfsfqdn 'adfs.example.com' -profilename awsuser -Name MySSO -iamrole 'OrganizationAccountAccessRole'
+Downloads the metadata document from 'adfs.example.com', connects to account 012345678912 and assumes role 'OrganizationAccountAccessRole'.
+Creates a new Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
 ```
 
 ## PARAMETERS
 
 ### -Name
-The name of the provider to create.
+The name of the SAML provider to update
 
 ```yaml
 Type: String
@@ -56,6 +58,66 @@ Required: True
 Position: 2
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -adfsfqdn
+Fully Qualified domain name for ADFS endpoint to query for metadata.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -profilename
+The user-defined name of an AWS credentials or SAML-based role profile containing credential information.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -iamrole
+The name of the IAM role to assume, including any path.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
+Default value: OrganizationAccountAccessRole
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -region
+The system name of an AWS region or an AWSRegion instance.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 6
+Default value: Eu-west-1
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -98,9 +160,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ## NOTES
-Place additional notes here.
 
 ## RELATED LINKS
 
-[New-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
-[Update-artfulIAMSAMLProvider] (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
+[New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)]()
+
+[Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)]()
+
