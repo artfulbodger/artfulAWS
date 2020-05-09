@@ -7,16 +7,28 @@ function New-artfulIAMSAMLProvider {
     .DESCRIPTION
       Downloads the ADFS metadata document directly from the ADFS endpoint declared, then creates the defined IAM Identity Provider with the metadata from ADFS by assuming the rolename provided.
 
-    .PARAMETER Name
-      The name of the provider to create.
-
     .PARAMETER id
       The unique identifier (ID) of the account.
 
+    .PARAMETER adfsfqdn
+      Fully Qualified domain name for ADFS endpoint to query for metadata.
+
+    .PARAMETER profilename
+      The user-defined name of an AWS credentials or SAML-based role profile containing credential information.
+
+    .PARAMETER iamrole
+      The name of the IAM role to assume, including any path.
+
+    .PARAMETER Name
+      The name of the SAML provider to update
+
+    .PARAMETER region
+      The system name of an AWS region or an AWSRegion instance.
 
     .EXAMPLE
-      New-artfulIAMSAMLProvider -Param1 Value
-      Describe what this call does
+      New-artfulIAMSAMLProvider -id '012345678912' -adfsfqdn 'adfs.example.com' -profilename awsuser -Name MySSO -iamrole 'OrganizationAccountAccessRole'
+      Downloads the metadata document from 'adfs.example.com', connects to account 012345678912 and assumes role 'OrganizationAccountAccessRole'.
+      Creates a new Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
 
     .LINK
       New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
@@ -30,7 +42,16 @@ function New-artfulIAMSAMLProvider {
   (
     [Parameter(Mandatory)][string]$Name,
     [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id,
-    [Parameter(Mandatory)][string]$adfsfqdn,
+    [Parameter(Mandatory)][ValidateScript( {
+        Try {
+          Invoke-Webrequest -uri "https://$($_)/FederationMetadata/2007-06/FederationMetadata.xml"
+          $true
+        }
+        Catch {
+          throw "Unable to connect to $_ "
+        }
+
+      })][string]$adfsfqdn,
     [Parameter(Mandatory)][ValidateScript( {
         If (Get-AWSCredential -ProfileName $_) {
           $true

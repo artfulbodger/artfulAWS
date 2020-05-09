@@ -32,17 +32,26 @@ function Update-artfulIAMSAMLProvider {
       Updates Identity provider 'MySSO' with metadata document retrieved from 'adfs.example.com'
 
     .LINK
-      New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
+      Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
 
     .LINK
-      Update-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider)
+      New-artfulIAMSAMLProvider (https://artfulbodger.github.io/artfulAWS/New-artfulIAMSAMLProvider)
   #>
   [CmdletBinding(SupportsShouldProcess = $true, HelpURI = "https://artfulbodger.github.io/artfulAWS/Update-artfulIAMSAMLProvider")]
   Param
   (
     [Parameter(Mandatory)][string]$Name,
     [Parameter(Mandatory, ValueFromPipeline)][ValidatePattern('\d{12}')][string]$Id,
-    [Parameter(Mandatory)][string]$adfsfqdn,
+    [Parameter(Mandatory)][ValidateScript( {
+        Try {
+          Invoke-Webrequest -uri "https://$($_)/FederationMetadata/2007-06/FederationMetadata.xml"
+          $true
+        }
+        Catch {
+          throw "Unable to connect to $_ "
+        }
+
+      })][string]$adfsfqdn,
     [Parameter(Mandatory)][ValidateScript( {
         If (Get-AWSCredential -ProfileName $_) {
           $true
@@ -64,7 +73,7 @@ function Update-artfulIAMSAMLProvider {
   Begin {
   }
   Process {
-    If ($PSCmdlet.ShouldProcess("AWS Account $Id", "Update ADFS SAML Identity Provider")) {
+    If ($PSCmdlet.ShouldProcess("AWS Account $Id, Identity Provider $name", "Update ADFS SAML Identity Provider")) {
       Try {
         $metadata = Invoke-Webrequest -uri "https://$($adfsfqdn)/FederationMetadata/2007-06/FederationMetadata.xml"
         $roleargs = @{
