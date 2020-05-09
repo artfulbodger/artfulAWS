@@ -1,7 +1,10 @@
 ---
 name: Feature request
 about: Suggest an idea for a new feature.
+title: ''
 labels: enhancement
+assignees: ''
+
 ---
 
 Before opening:
@@ -16,4 +19,3 @@ Feature requests must include:
 **Current Module Version:**
 
 ### Description of feature
-
